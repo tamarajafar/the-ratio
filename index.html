@@ -14,14 +14,13 @@
 <meta name="twitter:card" content="summary_large_image">
 
 <!-- ANALYTICS: Replace G-XXXXXXXXXX with your Google Analytics ID from analytics.google.com -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-H3RFJKPZPW"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-XXXXXXXXXX');
+  gtag('config', 'G-H3RFJKPZPW');
 
-  // Custom event tracker
   function track(event, params) {
     if (typeof gtag !== 'undefined') gtag('event', event, params || {});
   }
@@ -345,7 +344,7 @@
       <div class="card-watermark">the <span>Ratio</span></div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;">
         <div class="card-date" id="card-date"></div>
-        <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:0.05em;">theratio.vercel.app</div>
+        <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:0.05em;">the-ratio.vercel.app</div>
       </div>
     </div>
   </div>
@@ -798,7 +797,7 @@ function shareNative() {
   const titleEl = document.getElementById('result-title');
   const title = titleEl ? titleEl.innerText.replace(/\n/g,' ') : 'The Ratio';
   const msg = `I just got ${score}% Halal on The Ratio 😭 "${title}" — take the test:`;
-  const url = window.location.href;
+  const url = 'https://the-ratio.vercel.app';
   if (navigator.share) {
     navigator.share({ title:'The Ratio', text:msg, url }).catch(()=>{});
   } else {
@@ -811,7 +810,7 @@ function shareWhatsApp() {
   const score = document.getElementById('halal-num').textContent;
   const titleEl = document.getElementById('result-title');
   const title = titleEl ? titleEl.innerText.replace(/\n/g,' ') : 'The Ratio';
-  const msg = encodeURIComponent(`I just got ${score}% Halal on The Ratio 😭 "${title}" — take the test: ${window.location.href}`);
+  const msg = encodeURIComponent(`I just got ${score}% Halal on The Ratio 😭 "${title}" — take the test: https://the-ratio.vercel.app`);
   window.open(`https://wa.me/?text=${msg}`, '_blank');
 }
 
