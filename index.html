@@ -12,6 +12,20 @@
 <meta property="og:description" content="Take the test. Find out your Halal/Haram ratio. Share with your squad.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
+
+<!-- ANALYTICS: Replace G-XXXXXXXXXX with your Google Analytics ID from analytics.google.com -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+
+  // Custom event tracker
+  function track(event, params) {
+    if (typeof gtag !== 'undefined') gtag('event', event, params || {});
+  }
+</script>
 <script>
   const manifest = { name:"The Ratio", short_name:"The Ratio", description:"How halal are you, really?", start_url:"/", display:"standalone", background_color:"#0A0A0F", theme_color:"#0A0A0F" };
   const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
@@ -163,6 +177,16 @@
   .install-banner-text span { color:var(--muted); font-size:12px; }
   .install-btn { padding:8px 16px; background:var(--accent); color:var(--bg); border:none; border-radius:10px; font-family:'DM Sans',sans-serif; font-weight:700; font-size:13px; cursor:pointer; }
   .install-close { background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer; padding:4px; line-height:1; }
+
+  /* ONBOARDING */
+  .gender-btn, .age-btn {
+    flex:1; padding:14px 8px; background:var(--surface); border:1px solid var(--border);
+    border-radius:14px; color:var(--text); font-family:'DM Sans',sans-serif;
+    font-size:14px; font-weight:500; cursor:pointer; transition:all 0.15s;
+  }
+  .age-btn { padding:14px; }
+  .gender-btn:hover, .age-btn:hover { background:var(--surface2); border-color:rgba(192,160,60,0.3); }
+  .gender-btn.selected, .age-btn.selected { background:rgba(192,160,60,0.12); border-color:var(--accent); color:var(--text); }
 </style>
 </head>
 <body>
@@ -192,7 +216,46 @@
       <div class="avatar" style="background:#2a2e1a">🧑</div>
     </div>
     <div class="social-proof">2,847 ratios calculated today</div>
-    <button class="btn-primary" onclick="startTest()">Calculate My Ratio →</button>
+    <button class="btn-primary" onclick="showScreen('onboarding')">Calculate My Ratio →</button>
+  </div>
+</div>
+
+<!-- AGE + GENDER SCREEN -->
+<div id="onboarding" class="screen">
+  <div style="position:relative;z-index:1;max-width:420px;margin:0 auto;padding:0 20px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <div class="logo-mark" style="margin-bottom:20px;">
+      <svg viewBox="0 0 80 80" fill="none">
+        <path d="M40 4L76 22V58L40 76L4 58V22L40 4Z" stroke="rgba(192,160,60,0.4)" stroke-width="1.5"/>
+        <path d="M40 12L68 26V54L40 68L12 54V26L40 12Z" stroke="rgba(192,160,60,0.2)" stroke-width="1"/>
+      </svg>
+      <div class="logo-inner">R</div>
+    </div>
+    <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:900;line-height:1.2;margin-bottom:6px;">Before we begin...</div>
+    <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:36px;letter-spacing:0.05em;">just a couple things</div>
+
+    <!-- GENDER -->
+    <div style="width:100%;margin-bottom:28px;">
+      <div style="font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);margin-bottom:12px;text-align:left;">I identify as</div>
+      <div style="display:flex;gap:8px;">
+        <button class="gender-btn" onclick="selectGender(this,'man')">🧔 Man</button>
+        <button class="gender-btn" onclick="selectGender(this,'woman')">🧕 Woman</button>
+        <button class="gender-btn" onclick="selectGender(this,'other')">🙂 Other</button>
+      </div>
+    </div>
+
+    <!-- AGE -->
+    <div style="width:100%;margin-bottom:36px;">
+      <div style="font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);margin-bottom:12px;text-align:left;">My age group</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <button class="age-btn" onclick="selectAge(this,'18-24')">18 – 24</button>
+        <button class="age-btn" onclick="selectAge(this,'25-30')">25 – 30</button>
+        <button class="age-btn" onclick="selectAge(this,'31-35')">31 – 35</button>
+        <button class="age-btn" onclick="selectAge(this,'36+')">36+</button>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="ob-next" onclick="startTestFromOnboarding()" style="opacity:0.4;pointer-events:none;">Let's go →</button>
+    <button style="background:none;border:none;color:var(--muted);font-family:'Space Mono',monospace;font-size:11px;cursor:pointer;margin-top:8px;letter-spacing:0.05em;" onclick="skipOnboarding()">skip</button>
   </div>
 </div>
 
@@ -202,7 +265,7 @@
     <div class="progress-row">
       <button class="back-btn" onclick="goBack()">←</button>
       <div class="progress-dots" id="dots"></div>
-      <div class="q-counter" id="counter">1 / 19</div>
+      <div class="q-counter" id="counter">1 / 18</div>
     </div>
   </div>
   <div class="q-body" id="q-body"></div>
@@ -221,6 +284,26 @@
   </div>
 </div>
 
+<!-- NAME SCREEN -->
+<div id="namescreen" class="screen">
+  <div style="position:relative;z-index:1;max-width:420px;margin:0 auto;padding:0 20px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <div style="font-size:48px;margin-bottom:24px;">⚖️</div>
+    <div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:900;line-height:1.2;margin-bottom:8px;">Your ratio is<br><em style="color:var(--accent)">ready.</em></div>
+    <div style="font-family:'Space Mono',monospace;font-size:12px;color:var(--muted);margin-bottom:40px;letter-spacing:0.05em;">what should we call you?</div>
+    <input
+      id="name-input"
+      type="text"
+      placeholder="your name..."
+      maxlength="24"
+      style="width:100%;padding:18px 20px;background:var(--surface);border:1px solid var(--border);border-radius:16px;color:var(--text);font-family:'Playfair Display',serif;font-size:20px;text-align:center;outline:none;transition:border 0.2s;margin-bottom:12px;"
+      onkeydown="if(event.key==='Enter') revealResult()"
+      oninput="this.style.borderColor='var(--accent)'"
+    />
+    <button class="btn-primary" onclick="revealResult()">See My Ratio →</button>
+    <button style="background:none;border:none;color:var(--muted);font-family:'Space Mono',monospace;font-size:11px;cursor:pointer;margin-top:4px;letter-spacing:0.05em;" onclick="skipName()">skip</button>
+  </div>
+</div>
+
 <!-- RESULT -->
 <div id="result" class="screen">
   <div class="result-header">
@@ -235,7 +318,7 @@
       <polygon points="60,35 85,49 85,71 60,85 35,71 35,49" fill="none" stroke="white" stroke-width="0.8"/>
     </svg>
     <div class="card-top">
-      <div><div class="card-name">your ratio</div><div class="card-handle">@you</div></div>
+      <div><div class="card-name">your ratio</div><div class="card-handle" id="card-handle">@you</div></div>
       <div class="card-badge" id="card-badge"></div>
     </div>
     <div class="big-ratio">
@@ -260,7 +343,10 @@
     </div>
     <div class="card-footer">
       <div class="card-watermark">the <span>Ratio</span></div>
-      <div class="card-date" id="card-date"></div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;">
+        <div class="card-date" id="card-date"></div>
+        <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:0.05em;">theratio.vercel.app</div>
+      </div>
     </div>
   </div>
 
@@ -401,7 +487,7 @@ const questions = [
   ]},
   { cat:"rizq", category:"💬 Rizq", text:"Your parents know about the person you're seeing. Or do they...", answers:[
     {emoji:"😊", text:"Yes. They're involved in the process.", score:100},
-    {emoji:"🤐", text:"Yes. And they already love him.", score:55},
+    {emoji:"🤐", text:"Yes. And they already love them.", score:55},
     {emoji:"😬", text:"No. And they cannot find out.", score:10},
     {emoji:"🎭", text:"You have a whole separate story prepared if asked.", score:0}
   ]},
@@ -428,12 +514,6 @@ const questions = [
     {emoji:"🤔", text:"\"Getting to know people.\" Vague but not dishonest.", score:55},
     {emoji:"😅", text:"Whatever they want to hear honestly.", score:15},
     {emoji:"📲", text:"You have three apps and no one knows your real name.", score:0}
-  ]},
-  { cat:"rizq", category:"💬 Rizq", text:"Your parents ask how your deen is going. You...", answers:[
-    {emoji:"😊", text:"Tell them honestly — wins and struggles both.", score:100},
-    {emoji:"🙂", text:"\"Alhamdulillah, good.\" Technically not a lie.", score:55},
-    {emoji:"📊", text:"Immediately change the subject. Works every time.", score:20},
-    {emoji:"📵", text:"You've been declining their FaceTime for two weeks.", score:0}
   ]}
 ];
 
@@ -474,7 +554,14 @@ function showScreen(id) {
 // ── QUIZ ───────────────────────────────────────────────────────
 function startTest() {
   current = 0;
+  userName = '';
+  userGender = '';
+  userAge = '';
   catScores = { plate:[], deen:[], vibe:[], rizq:[] };
+  document.getElementById('name-input').value = '';
+  document.querySelectorAll('.gender-btn,.age-btn').forEach(b => b.classList.remove('selected'));
+  const btn = document.getElementById('ob-next');
+  if (btn) { btn.style.opacity='0.4'; btn.style.pointerEvents='none'; }
   renderQuestion();
   showScreen('question');
 }
@@ -548,8 +635,62 @@ function showLoading() {
   setTimeout(() => {
     clearInterval(msgInterval);
     buildResult();
-    showScreen('result');
+    showScreen('namescreen');
+    setTimeout(() => document.getElementById('name-input').focus(), 400);
   }, 5000);
+}
+
+let userName = '';
+let userGender = '';
+let userAge = '';
+
+function selectGender(el, val) {
+  document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  userGender = val;
+  checkOnboardingComplete();
+}
+
+function selectAge(el, val) {
+  document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  userAge = val;
+  checkOnboardingComplete();
+}
+
+function checkOnboardingComplete() {
+  const btn = document.getElementById('ob-next');
+  if (userGender && userAge) {
+    btn.style.opacity = '1';
+    btn.style.pointerEvents = 'auto';
+  }
+}
+
+function startTestFromOnboarding() {
+  track('test_started', { gender: userGender, age: userAge });
+  startTest();
+}
+
+function skipOnboarding() {
+  track('onboarding_skipped');
+  userGender = '';
+  userAge = '';
+  startTest();
+}
+
+function revealResult() {
+  const input = document.getElementById('name-input').value.trim();
+  userName = input || 'you';
+  const handle = userName === 'you' ? '@you' : `@${userName.toLowerCase().replace(/\s+/g,'')}`;
+  document.getElementById('card-handle').textContent = handle;
+  track('result_revealed', { name_provided: input.length > 0 });
+  showScreen('result');
+}
+
+function skipName() {
+  userName = 'you';
+  document.getElementById('card-handle').textContent = '@you';
+  showScreen('result');
 }
 
 // ── RESULT ─────────────────────────────────────────────────────
@@ -565,6 +706,9 @@ function buildResult() {
   const arch = archetypes.find(a => overall >= a.min) || archetypes[archetypes.length-1];
   document.getElementById('result-title').innerHTML = arch.title;
   document.getElementById('card-badge').textContent = arch.badge;
+  // Update result eyebrow with name if provided
+  const eyebrow = document.querySelector('.result-eyebrow');
+  if (eyebrow) eyebrow.textContent = userName && userName !== 'you' ? `${userName}, your ratio is` : 'Your Ratio is';
 
   animateCount('halal-num', overall, 'var(--halal)', 800);
   animateCount('haram-num', haram, 'var(--haram)', 1000);
@@ -590,6 +734,13 @@ function buildResult() {
   const combo = getComboVibe(ps, ds, vs, rs);
   document.getElementById('vibe-text').textContent = combo || arch.vibe;
 
+  track('result_calculated', {
+    overall_score: overall,
+    archetype: arch.badge,
+    plate: ps, deen: ds, vibe: vs, rizq: rs,
+    gender: userGender, age: userAge
+  });
+
   const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
   const now = new Date();
   document.getElementById('card-date').textContent = `${months[now.getMonth()]} ${now.getFullYear()}`;
@@ -614,6 +765,7 @@ function animateCount(id, target, color, delay) {
 
 // ── SHARE & SAVE ───────────────────────────────────────────────
 async function saveCard() {
+  track('share_card_saved');
   const btn  = document.getElementById('btn-save');
   const icon = document.getElementById('save-icon');
   const text = document.getElementById('save-text');
@@ -641,6 +793,7 @@ async function saveCard() {
 }
 
 function shareNative() {
+  track('share_native');
   const score = document.getElementById('halal-num').textContent;
   const titleEl = document.getElementById('result-title');
   const title = titleEl ? titleEl.innerText.replace(/\n/g,' ') : 'The Ratio';
@@ -654,6 +807,7 @@ function shareNative() {
 }
 
 function shareWhatsApp() {
+  track('share_whatsapp');
   const score = document.getElementById('halal-num').textContent;
   const titleEl = document.getElementById('result-title');
   const title = titleEl ? titleEl.innerText.replace(/\n/g,' ') : 'The Ratio';
