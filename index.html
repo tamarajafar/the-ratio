@@ -4,82 +4,62 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>The Ratio — How Halal Are You?</title>
-
-<!-- PWA -->
 <meta name="theme-color" content="#0A0A0F">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Ratio">
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230A0A0F'/><text y='.9em' font-size='80' x='10'>⚖️</text></svg>">
-
-<!-- Open Graph / Social sharing -->
 <meta property="og:title" content="The Ratio — How Halal Are You?">
 <meta property="og:description" content="Take the test. Find out your Halal/Haram ratio. Share with your squad.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="The Ratio — How Halal Are You?">
-<meta name="twitter:description" content="Take the test. Find out your Halal/Haram ratio. Share with your squad.">
-
-<!-- Manifest inline via JS (no separate file needed for Vercel) -->
 <script>
-  const manifest = {
-    name: "The Ratio",
-    short_name: "The Ratio",
-    description: "How halal are you, really?",
-    start_url: "/",
-    display: "standalone",
-    background_color: "#0A0A0F",
-    theme_color: "#0A0A0F",
-    icons: [{ src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230A0A0F'/><text y='.9em' font-size='80' x='10'>⚖️</text></svg>", sizes: "192x192", type: "image/svg+xml" }]
-  };
-  const blob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('link');
-  link.rel = 'manifest'; link.href = url;
-  document.currentScript.after(link);
+  const manifest = { name:"The Ratio", short_name:"The Ratio", description:"How halal are you, really?", start_url:"/", display:"standalone", background_color:"#0A0A0F", theme_color:"#0A0A0F" };
+  const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
+  const murl = URL.createObjectURL(blob);
+  const ml = document.createElement('link'); ml.rel='manifest'; ml.href=murl;
+  document.currentScript.after(ml);
 </script>
-
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   :root {
-    --halal: #2ECC71; --haram: #E74C3C;
-    --bg: #0A0A0F; --surface: #13131A; --surface2: #1C1C27;
-    --border: rgba(255,255,255,0.07); --text: #F5F0E8;
-    --muted: rgba(245,240,232,0.45); --accent: #C9A84C;
+    --halal:#2ECC71; --haram:#E74C3C;
+    --bg:#0A0A0F; --surface:#13131A; --surface2:#1C1C27;
+    --border:rgba(255,255,255,0.07); --text:#F5F0E8;
+    --muted:rgba(245,240,232,0.45); --accent:#C9A84C;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; overflow-x:hidden; }
-  body::before { content:''; position:fixed; inset:0; background: radial-gradient(ellipse 60% 40% at 20% 10%, rgba(46,204,113,0.08) 0%, transparent 60%), radial-gradient(ellipse 50% 35% at 80% 80%, rgba(231,76,60,0.07) 0%, transparent 60%), radial-gradient(ellipse 40% 30% at 60% 30%, rgba(192,160,60,0.05) 0%, transparent 50%); pointer-events:none; z-index:0; }
+  body::before { content:''; position:fixed; inset:0; background:radial-gradient(ellipse 60% 40% at 20% 10%,rgba(46,204,113,0.08) 0%,transparent 60%),radial-gradient(ellipse 50% 35% at 80% 80%,rgba(231,76,60,0.07) 0%,transparent 60%),radial-gradient(ellipse 40% 30% at 60% 30%,rgba(192,160,60,0.05) 0%,transparent 50%); pointer-events:none; z-index:0; }
   body::after { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.018'%3E%3Cpath d='M30 0l30 30-30 30L0 30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); pointer-events:none; z-index:0; }
 
   .screen { display:none; }
   .screen.active { display:block; animation:fadeUp 0.4s ease forwards; }
   #splash.active, #loading.active { display:flex; }
-  @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);} }
 
   /* SPLASH */
   #splash { min-height:100vh; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:40px 20px; position:relative; z-index:1; }
   .logo-mark { width:80px; height:80px; margin:0 auto 24px; position:relative; }
   .logo-mark svg { width:100%; height:100%; animation:rotateSlow 20s linear infinite; }
-  @keyframes rotateSlow { to { transform:rotate(360deg); } }
+  @keyframes rotateSlow { to{transform:rotate(360deg);} }
   .logo-inner { position:absolute; inset:18px; background:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-weight:900; font-size:22px; color:var(--bg); }
   .app-name { font-family:'Playfair Display',serif; font-size:48px; font-weight:900; letter-spacing:-1px; line-height:1; margin-bottom:8px; }
   .app-name span.the { font-style:italic; font-weight:400; color:var(--accent); font-size:32px; display:block; margin-bottom:-4px; }
   .tagline { font-size:14px; color:var(--muted); letter-spacing:0.05em; margin-bottom:48px; font-family:'Space Mono',monospace; }
-  .ratio-preview { display:flex; gap:8px; margin-bottom:48px; align-items:center; }
+  .ratio-preview { display:flex; gap:8px; margin-bottom:48px; align-items:center; justify-content:center; }
   .ratio-bar-wrap { width:200px; height:8px; background:rgba(255,255,255,0.08); border-radius:100px; overflow:hidden; }
   .ratio-bar-fill { height:100%; width:0; background:linear-gradient(90deg,var(--halal),var(--accent)); border-radius:100px; animation:fillBar 1.8s ease 0.6s forwards; }
-  @keyframes fillBar { to { width:68%; } }
+  @keyframes fillBar { to{width:68%;} }
   .ratio-pct { font-family:'Space Mono',monospace; font-size:12px; color:var(--halal); }
   .friend-avatars { display:flex; align-items:center; justify-content:center; margin-bottom:12px; }
   .avatar { width:36px; height:36px; border-radius:50%; border:2px solid var(--bg); display:flex; align-items:center; justify-content:center; font-size:16px; margin-left:-8px; }
   .avatar:first-child { margin-left:0; }
   .social-proof { font-size:12px; color:var(--muted); margin-bottom:40px; font-family:'Space Mono',monospace; }
   .notif-chip { display:inline-flex; align-items:center; gap:6px; padding:6px 14px 6px 8px; background:var(--surface); border:1px solid var(--border); border-radius:100px; font-size:12px; color:var(--muted); margin-bottom:28px; animation:float 3s ease infinite; }
-  @keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-4px);} }
+  @keyframes float { 0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);} }
   .notif-dot { width:8px; height:8px; border-radius:50%; background:var(--halal); animation:blink 1.5s ease infinite; }
-  @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+  @keyframes blink { 0%,100%{opacity:1;}50%{opacity:0.3;} }
   .btn-primary { width:100%; padding:18px; background:var(--accent); color:var(--bg); border:none; border-radius:16px; font-family:'DM Sans',sans-serif; font-weight:700; font-size:16px; cursor:pointer; transition:transform 0.15s,opacity 0.15s; margin-bottom:12px; }
   .btn-primary:hover { transform:scale(1.02); opacity:0.92; }
   .btn-primary:active { transform:scale(0.98); }
@@ -112,7 +92,7 @@
   .ring-fill { width:100%; height:100%; border-radius:50%; border:3px solid transparent; border-top-color:var(--halal); border-right-color:var(--accent); position:absolute; animation:spin 1.2s linear infinite; }
   @keyframes spin { to{transform:rotate(360deg);} }
   .ring-center { position:absolute; inset:16px; background:var(--surface); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:28px; animation:pulse 1.2s ease infinite; }
-  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
+  @keyframes pulse { 0%,100%{opacity:1;}50%{opacity:0.5;} }
   .loading-label { font-family:'Space Mono',monospace; font-size:11px; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:10px; }
   .loading-msg { font-family:'Playfair Display',serif; font-size:20px; font-weight:700; min-height:32px; transition:opacity 0.4s; }
 
@@ -122,7 +102,6 @@
   .result-eyebrow { font-family:'Space Mono',monospace; font-size:11px; color:var(--muted); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:10px; }
   .result-title { font-family:'Playfair Display',serif; font-size:34px; font-weight:900; line-height:1.1; letter-spacing:-0.5px; }
   .result-title em { font-style:italic; color:var(--accent); }
-
   .ratio-card { margin:28px 20px; background:var(--surface); border:1px solid var(--border); border-radius:24px; padding:26px; position:relative; overflow:hidden; }
   .ratio-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--halal),var(--accent),var(--haram)); }
   .card-geo { position:absolute; top:-20px; right:-20px; width:120px; height:120px; opacity:0.05; }
@@ -130,19 +109,15 @@
   .card-name { font-size:12px; color:var(--muted); margin-bottom:3px; }
   .card-handle { font-family:'Space Mono',monospace; font-size:14px; font-weight:700; }
   .card-badge { padding:5px 10px; background:rgba(192,160,60,0.12); border:1px solid rgba(192,160,60,0.3); border-radius:100px; font-family:'Space Mono',monospace; font-size:10px; color:var(--accent); letter-spacing:0.04em; text-align:right; max-width:150px; line-height:1.4; }
-
   .big-ratio { text-align:center; margin-bottom:20px; }
   .ratio-split { display:flex; align-items:baseline; justify-content:center; gap:4px; margin-bottom:8px; }
   .ratio-halal-num { font-family:'Playfair Display',serif; font-size:72px; font-weight:900; line-height:1; color:var(--halal); letter-spacing:-3px; }
-  .ratio-divider { font-family:'Playfair Display',serif; font-size:36px; color:var(--muted); line-height:1; margin:0 6px; }
   .ratio-haram-num { font-family:'Playfair Display',serif; font-size:72px; font-weight:900; line-height:1; color:var(--haram); letter-spacing:-3px; }
   .ratio-labels { display:flex; justify-content:center; gap:32px; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; }
   .lbl-halal { color:var(--halal); } .lbl-haram { color:var(--haram); }
-
   .split-bar { height:10px; border-radius:100px; background:var(--surface2); overflow:hidden; margin-bottom:22px; display:flex; }
   .split-halal { height:100%; background:linear-gradient(90deg,var(--halal),#27AE60); border-radius:100px 0 0 100px; transition:width 1.5s cubic-bezier(0.34,1.56,0.64,1); }
   .split-haram { height:100%; background:linear-gradient(90deg,#C0392B,var(--haram)); border-radius:0 100px 100px 0; flex:1; }
-
   .categories { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:18px; }
   .cat-item { background:var(--surface2); border-radius:12px; padding:12px; }
   .cat-header { display:flex; align-items:center; gap:6px; margin-bottom:7px; }
@@ -151,25 +126,22 @@
   .cat-score { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; margin-bottom:6px; }
   .cat-bar { height:3px; border-radius:100px; background:var(--border); overflow:hidden; }
   .cat-fill { height:100%; border-radius:100px; transition:width 1.5s ease 0.4s; }
-
   .vibe-summary { background:var(--surface2); border-radius:14px; padding:14px 16px; border-left:3px solid var(--accent); }
   .vibe-label { font-family:'Space Mono',monospace; font-size:9px; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent); margin-bottom:6px; }
   .vibe-text { font-family:'Playfair Display',serif; font-size:14px; font-style:italic; line-height:1.5; }
-
   .card-footer { display:flex; justify-content:space-between; align-items:center; margin-top:18px; padding-top:14px; border-top:1px solid var(--border); }
   .card-watermark { font-family:'Playfair Display',serif; font-size:13px; font-style:italic; color:var(--muted); }
   .card-watermark span { color:var(--accent); }
   .card-date { font-family:'Space Mono',monospace; font-size:10px; color:var(--muted); }
-
   .actions { padding:0 20px; display:flex; flex-direction:column; gap:10px; }
   .btn-share { width:100%; padding:18px; background:linear-gradient(135deg,var(--halal),var(--accent)); color:var(--bg); border:none; border-radius:16px; font-family:'DM Sans',sans-serif; font-weight:700; font-size:16px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:10px; }
   .btn-share:hover { transform:scale(1.02); filter:brightness(1.05); }
+  .btn-share:disabled { opacity:0.7; transform:none; cursor:wait; }
   .share-row { display:flex; gap:10px; }
   .btn-platform { flex:1; padding:13px; background:var(--surface); border:1px solid var(--border); border-radius:14px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; justify-content:center; gap:6px; }
   .btn-platform:hover { background:var(--surface2); border-color:rgba(255,255,255,0.15); }
   .btn-retake { width:100%; padding:14px; background:transparent; border:1px solid var(--border); border-radius:14px; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:14px; cursor:pointer; transition:all 0.15s; }
   .btn-retake:hover { color:var(--text); border-color:rgba(255,255,255,0.2); }
-
   .friends-section { padding:0 20px; margin-top:32px; }
   .section-title { font-family:'Space Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.12em; color:var(--muted); margin-bottom:14px; }
   .friend-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px 16px; display:flex; align-items:center; gap:14px; margin-bottom:8px; cursor:pointer; transition:all 0.15s; }
@@ -182,18 +154,15 @@
   .f-pct { font-family:'Playfair Display',serif; font-size:20px; font-weight:700; }
   .f-bar { width:60px; height:3px; background:var(--surface2); border-radius:100px; overflow:hidden; margin-top:4px; margin-left:auto; }
   .f-bar-fill { height:100%; border-radius:100px; }
-
   .nav-tabs { display:flex; margin:32px 20px 0; gap:2px; background:var(--surface); border-radius:14px; padding:4px; }
   .nav-tab { flex:1; padding:10px; border-radius:10px; border:none; background:transparent; color:var(--muted); font-family:'Space Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:0.05em; cursor:pointer; transition:all 0.15s; }
   .nav-tab.active { background:var(--surface2); color:var(--text); }
-
-  /* INSTALL BANNER */
-  .install-banner { display:none; position:fixed; bottom:24px; left:20px; right:20px; max-width:380px; margin:0 auto; background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px 16px; align-items:center; gap:12px; z-index:100; box-shadow:0 8px 32px rgba(0,0,0,0.4); animation:fadeUp 0.4s ease; }
-  .install-banner-text { flex:1; font-size:13px; }
+  .install-banner { display:none; position:fixed; bottom:24px; left:20px; right:20px; max-width:380px; margin:0 auto; background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px 16px; align-items:center; gap:12px; z-index:100; box-shadow:0 8px 32px rgba(0,0,0,0.4); }
+  .install-banner-text { flex:1; }
   .install-banner-text strong { display:block; font-size:14px; margin-bottom:2px; }
   .install-banner-text span { color:var(--muted); font-size:12px; }
-  .install-btn { padding:8px 16px; background:var(--accent); color:var(--bg); border:none; border-radius:10px; font-family:'DM Sans',sans-serif; font-weight:700; font-size:13px; cursor:pointer; white-space:nowrap; }
-  .install-close { background:none; border:none; color:var(--muted); font-size:18px; cursor:pointer; padding:4px; }
+  .install-btn { padding:8px 16px; background:var(--accent); color:var(--bg); border:none; border-radius:10px; font-family:'DM Sans',sans-serif; font-weight:700; font-size:13px; cursor:pointer; }
+  .install-close { background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer; padding:4px; line-height:1; }
 </style>
 </head>
 <body>
@@ -211,7 +180,7 @@
     </div>
     <div class="app-name"><span class="the">the</span>Ratio</div>
     <div class="tagline">how halal are you, really?</div>
-    <div class="ratio-preview" style="justify-content:center;">
+    <div class="ratio-preview">
       <div class="ratio-bar-wrap"><div class="ratio-bar-fill"></div></div>
       <div class="ratio-pct">68%</div>
     </div>
@@ -233,7 +202,7 @@
     <div class="progress-row">
       <button class="back-btn" onclick="goBack()">←</button>
       <div class="progress-dots" id="dots"></div>
-      <div class="q-counter" id="counter">1 / 17</div>
+      <div class="q-counter" id="counter">1 / 19</div>
     </div>
   </div>
   <div class="q-body" id="q-body"></div>
@@ -259,7 +228,7 @@
     <div class="result-title" id="result-title"></div>
   </div>
 
-  <div class="ratio-card">
+  <div class="ratio-card" id="share-card">
     <svg class="card-geo" viewBox="0 0 120 120">
       <polygon points="60,5 115,35 115,85 60,115 5,85 5,35" fill="none" stroke="white" stroke-width="1.5"/>
       <polygon points="60,20 100,42 100,78 60,100 20,78 20,42" fill="none" stroke="white" stroke-width="1"/>
@@ -272,7 +241,7 @@
     <div class="big-ratio">
       <div class="ratio-split">
         <div class="ratio-halal-num" id="halal-num">0</div>
-        <div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding-bottom:6px">
+        <div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding-bottom:6px;margin:0 6px;">
           <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--halal);letter-spacing:0.1em">HALAL</div>
           <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--haram);letter-spacing:0.1em">HARAM</div>
         </div>
@@ -296,8 +265,8 @@
   </div>
 
   <div class="actions">
-    <button class="btn-share" onclick="saveCard()" id="btn-save">
-      <span id="save-icon">✦</span> <span id="save-text">Save My Ratio Card</span>
+    <button class="btn-share" id="btn-save" onclick="saveCard()">
+      <span id="save-icon">✦</span>&nbsp;<span id="save-text">Save My Ratio Card</span>
     </button>
     <div class="share-row">
       <button class="btn-platform" onclick="shareToInstagram()">📸 Story</button>
@@ -338,377 +307,6 @@
   </div>
 </div>
 
-<script>
-const questions = [
-  { cat:"plate", category:"🍔 Plate", text:"Your friends order pizza. The only option has pepperoni. You...", answers:[
-    {emoji:"🚫",text:"Hard no. I'll eat before I arrive next time.",score:100},
-    {emoji:"🤔",text:"Pick the pepperoni off. It's basically halal now.",score:35},
-    {emoji:"😬",text:"One slice won't hurt... probably.",score:10},
-    {emoji:"🤷",text:"I ordered the pepperoni tbh.",score:0}
-  ]},
-  { cat:"plate", category:"🍔 Plate", text:"Someone offers you a drink at a party. You...", answers:[
-    {emoji:"✋",text:"\"I don't drink.\" No explanation needed.",score:100},
-    {emoji:"🥤",text:"Ask if there's anything non-alcoholic.",score:80},
-    {emoji:"👃",text:"Take a sip just to see what it tastes like.",score:10},
-    {emoji:"🥃",text:"You brought the bottle.",score:0}
-  ]},
-  { cat:"plate", category:"🍔 Plate", text:"You're three drinks in and your mum calls. You...", answers:[
-    {emoji:"📵",text:"This scenario does not apply to me.",score:100},
-    {emoji:"😬",text:"Let it ring. Call back tomorrow.",score:30},
-    {emoji:"🤫",text:"Answer but speak very carefully.",score:15},
-    {emoji:"😂",text:"Tell her you love her. She has no idea.",score:0}
-  ]},
-  { cat:"deen", category:"🌙 Deen", text:"The last time you prayed was...", answers:[
-    {emoji:"🕌",text:"Today.",score:100},
-    {emoji:"📅",text:"This week.",score:65},
-    {emoji:"🤔",text:"Recently. Ish.",score:25},
-    {emoji:"💭",text:"You'd have to think about it.",score:0}
-  ]},
-  { cat:"deen", category:"🌙 Deen", text:"It's Ramadan. Your actual situation is...", answers:[
-    {emoji:"📿",text:"Fasting every day. Taraweeh most nights.",score:100},
-    {emoji:"🌙",text:"Fasting. Not doing much else.",score:65},
-    {emoji:"😬",text:"Fasting when it's convenient.",score:25},
-    {emoji:"🍔",text:"Eating normally and telling no one.",score:0}
-  ]},
-  { cat:"deen", category:"🌙 Deen", text:"The morning after a night out, you feel...", answers:[
-    {emoji:"😴",text:"I don't have nights out.",score:100},
-    {emoji:"🤲",text:"Guilty.",score:45},
-    {emoji:"😐",text:"Fine.",score:10},
-    {emoji:"🔄",text:"Already planning the next one.",score:0}
-  ]},
-  { cat:"vibe", category:"🤳 Vibe", text:"Someone finds your camera roll. You...", answers:[
-    {emoji:"📸",text:"Completely fine. Here, scroll.",score:100},
-    {emoji:"😊",text:"Fine, nothing crazy.",score:70},
-    {emoji:"😬",text:"Grab your phone back.",score:20},
-    {emoji:"💀",text:"That cannot happen.",score:0}
-  ]},
-  { cat:"vibe", category:"🤳 Vibe", text:"Your finsta versus your main account. The difference is...", answers:[
-    {emoji:"🤷",text:"I don't have a finsta. Same person everywhere.",score:100},
-    {emoji:"😊",text:"Just more unfiltered. Same person essentially.",score:65},
-    {emoji:"😬",text:"Different lifestyle entirely. We don't cross-post.",score:15},
-    {emoji:"🎭",text:"Two different people. Two different lives.",score:0}
-  ]},
-  { cat:"vibe", category:"🤳 Vibe", text:"How many personalities do you have depending on who you're around?", answers:[
-    {emoji:"😇",text:"One. I'm the same person everywhere.",score:100},
-    {emoji:"🔄",text:"Two — home version and outside version.",score:60},
-    {emoji:"🎭",text:"Three or four. It's called code-switching.",score:20},
-    {emoji:"🃏",text:"Genuinely lost count. Depends on the group.",score:0}
-  ]},
-  { cat:"vibe", category:"🤳 Vibe", text:"Your relationship with weed, cigarettes, hookah, or anything in that zone is...", answers:[
-    {emoji:"🚫",text:"Nothing. Clean. Never touched it.",score:100},
-    {emoji:"💨",text:"Hookah occasionally. It's a vibe and you know it.",score:50},
-    {emoji:"🤧",text:"Regular cigarettes or weed. I've justified it to myself.",score:15},
-    {emoji:"🌿",text:"All of the above. It's a whole lifestyle at this point.",score:0}
-  ]},
-  { cat:"vibe", category:"🤳 Vibe", text:"How you dress when you go out is...", answers:[
-    {emoji:"🧕",text:"Covered and modest. Every day, no exceptions.",score:100},
-    {emoji:"😊",text:"Generally modest. Nothing too revealing.",score:70},
-    {emoji:"🫣",text:"Depends entirely on who I'm seeing and where I'm going.",score:25},
-    {emoji:"🪞",text:"My mum would not approve of this outfit.",score:0}
-  ]},
-  { cat:"rizq", category:"💬 Rizq", text:"Your actual relationship situation right now is...", answers:[
-    {emoji:"💍",text:"Single, married, or pursuing someone with clear intentions.",score:100},
-    {emoji:"📖",text:"Talking to someone. Keeping it halal. Mostly.",score:55},
-    {emoji:"🫠",text:"Situationship. No label. Don't ask.",score:20},
-    {emoji:"🕸️",text:"It's complicated and getting more complicated.",score:0}
-  ]},
-  { cat:"rizq", category:"💬 Rizq", text:"Your parents know about the person you're seeing. Or do they...", answers:[
-    {emoji:"😊",text:"Yes. They're involved in the process.",score:100},
-    {emoji:"🤐",text:"Yes. And they already love him.",score:55},
-    {emoji:"😬",text:"No. And they cannot find out.",score:10},
-    {emoji:"🎭",text:"You have a whole separate story prepared if asked.",score:0}
-  ]},
-  { cat:"rizq", category:"💬 Rizq", text:"You've lied to your parents about where you were...", answers:[
-    {emoji:"🤷",text:"Never.",score:100},
-    {emoji:"😬",text:"Once or twice. Small things.",score:50},
-    {emoji:"😐",text:"Regularly. It's just easier.",score:10},
-    {emoji:"📋",text:"You have a system.",score:0}
-  ]},
-  { cat:"rizq", category:"💬 Rizq", text:"What dating app are you on?", answers:[
-    {emoji:"🤲",text:"Astaghfirullah, not on any dating apps.",score:100},
-    {emoji:"🍯",text:"Baklava or Muzz. Keeping it in the community.",score:80},
-    {emoji:"💛",text:"Hinge or Raya. Intentions are... technically there.",score:25},
-    {emoji:"🔥",text:"Tinder. And the profile is very much active.",score:0}
-  ]},
-  { cat:"rizq", category:"💬 Rizq", text:"It's Friday night. You're...", answers:[
-    {emoji:"🕌",text:"At an Islamic event or a halaqah.",score:100},
-    {emoji:"🎮",text:"Halal hangout. Food, games, home by midnight.",score:75},
-    {emoji:"🍻",text:"Out.",score:15},
-    {emoji:"🌅",text:"Getting home as the Fajr adhan plays.",score:0}
-  ]},
-  { cat:"rizq", category:"💬 Rizq", text:"You matched with someone on a dating app. They ask what you're looking for. You say...", answers:[
-    {emoji:"💍",text:"Something serious, eventually leading to marriage.",score:100},
-    {emoji:"🤔",text:"\"Getting to know people.\" Vague but not dishonest.",score:55},
-    {emoji:"😅",text:"Whatever they want to hear honestly.",score:15},
-    {emoji:"📲",text:"You have three apps and no one knows your real name.",score:0}
-  ]},
-  { cat:"vibe", category:"🤳 Vibe", text:"Your non-Muslim friends know you're Muslim. They'd describe your lifestyle as...", answers:[
-    {emoji:"🌟",text:"Practicing. They respect it.",score:100},
-    {emoji:"😊",text:"Muslim but relaxed about it.",score:60},
-    {emoji:"😐",text:"They don't really associate you with being Muslim.",score:20},
-    {emoji:"🙈",text:"They don't know you're Muslim.",score:0}
-  ]}
-];
-
-const archetypes = [
-  { min:90, title:'<em>Sheikh/Sheikha</em><br>Energy', badge:'SHEIKH/SHEIKHA ENERGY', vibe:'"Carrying the ummah on your back. Mashallah. Are you okay though?"' },
-  { min:75, title:'Habibi,<br><em>You\'re Trying</em>', badge:"HABIBI, YOU'RE TRYING", vibe:'"Not perfect but the intention is there. Allah sees the effort."' },
-  { min:60, title:'<em>Certified</em><br>Moderate Muslim', badge:'CERTIFIED MODERATE MUSLIM', vibe:'"Halal food, most prayers, and your situationship is... developing."' },
-  { min:40, title:'<em>Islamically</em><br>Ambiguous', badge:'ISLAMICALLY AMBIGUOUS', vibe:'"You picked the pepperoni off. You held the drink but didn\'t sip it. We respect the effort."' },
-  { min:20, title:'Astaghfirullah<br><em>Deluxe</em>', badge:'ASTAGHFIRULLAH DELUXE', vibe:'"You know what you\'re doing. You also know what you should be doing. These are not the same thing."' },
-  { min:0,  title:'May Allah<br><em>Have Mercy</em>', badge:'MAY ALLAH HAVE MERCY', vibe:'"Not lost. Just on a very scenic route back. We believe in you habibi."' }
-];
-
-function getComboVibe(p, d, v, r) {
-  if (p >= 90 && r < 40) return '"Would never touch non-halal meat but your situationship has a situationship. Interesting priorities."';
-  if (d >= 85 && v < 40) return '"Praying consistently but your camera roll says otherwise. A complex individual."';
-  if (v >= 80 && r < 40) return '"Clean finsta, chaotic love life. The algorithm is saved. The heart is not."';
-  if (p < 30 && d >= 60) return '"Spiritually holding on. But you ate the pepperoni and you know what you did."';
-  if (r >= 90 && d < 40) return '"Waiting for the right one but hasn\'t prayed in a while. The intentions are there. The execution needs work."';
-  return null;
-}
-
-function avg(arr) { return arr.length ? Math.round(arr.reduce((a,b)=>a+b,0)/arr.length) : 0; }
-function scoreColor(s) { return s>=75?'var(--halal)':s>=45?'var(--accent)':'var(--haram)'; }
-
-let current = 0;
-let catScores = { plate:[], deen:[], vibe:[], rizq:[] };
-
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0,0);
-}
-
-function startTest() {
-  current = 0;
-  catScores = { plate:[], deen:[], vibe:[], rizq:[] };
-  renderQuestion();
-  showScreen('question');
-}
-
-function renderQuestion() {
-  const q = questions[current];
-  document.getElementById('dots').innerHTML = questions.map((_,i)=>
-    `<div class="dot ${i<current?'done':i===current?'current':''}"></div>`
-  ).join('');
-  document.getElementById('counter').textContent = `${current+1} / ${questions.length}`;
-  document.getElementById('q-body').innerHTML = `
-    <div class="q-category">${q.category}</div>
-    <div class="q-text">${q.text}</div>
-    <div class="answer-list">
-      ${q.answers.map((a,i)=>`
-        <button class="answer-btn" onclick="selectAnswer(${a.score},'${q.cat}',${i})">
-          <span class="answer-emoji">${a.emoji}</span>
-          <span>${a.text}</span>
-        </button>
-      `).join('')}
-    </div>
-  `;
-}
-
-function selectAnswer(score, cat, idx) {
-  document.querySelectorAll('.answer-btn').forEach((b,i)=>{
-    b.disabled = true;
-    if(i===idx) b.classList.add('selected');
-  });
-  catScores[cat].push(score);
-  setTimeout(()=>{
-    if(current < questions.length-1){ current++; renderQuestion(); }
-    else showLoading();
-  }, 380);
-}
-
-function goBack() {
-  if(current > 0){
-    catScores[questions[current-1].cat].pop();
-    current--;
-    renderQuestion();
-  } else {
-    showScreen('splash');
-  }
-}
-
-const loadingMsgs = [
-  "consulting the scholars...",
-  "checking your camera roll...",
-  "evaluating your situationship...",
-  "asking your mum...",
-  "reviewing your finsta...",
-  "running the numbers..."
-];
-let msgIdx=0, msgInterval;
-
-function showLoading() {
-  showScreen('loading');
-  const el = document.getElementById('loading-msg');
-  el.textContent = loadingMsgs[0]; msgIdx = 0;
-  msgInterval = setInterval(()=>{
-    el.style.opacity=0;
-    setTimeout(()=>{ msgIdx=(msgIdx+1)%loadingMsgs.length; el.textContent=loadingMsgs[msgIdx]; el.style.opacity=1; },400);
-  },1800);
-  setTimeout(()=>{ clearInterval(msgInterval); buildResult(); showScreen('result'); },5000);
-}
-
-function buildResult() {
-  const ps=avg(catScores.plate), ds=avg(catScores.deen), vs=avg(catScores.vibe), rs=avg(catScores.rizq);
-  const all=[...catScores.plate,...catScores.deen,...catScores.vibe,...catScores.rizq];
-  const overall=avg(all), haram=100-overall;
-
-  const arch = archetypes.find(a=>overall>=a.min)||archetypes[archetypes.length-1];
-  document.getElementById('result-title').innerHTML = arch.title;
-  document.getElementById('card-badge').textContent = arch.badge;
-
-  animateCount('halal-num', overall, 'var(--halal)', 800);
-  animateCount('haram-num', haram, 'var(--haram)', 1000);
-  setTimeout(()=>{ document.getElementById('split-halal').style.width=overall+'%'; },300);
-
-  const cats=[
-    {emoji:'🍔',name:'Plate',score:ps},
-    {emoji:'🤳',name:'Vibe',score:vs},
-    {emoji:'💬',name:'Rizq',score:rs},
-    {emoji:'🌙',name:'Deen',score:ds}
-  ];
-  document.getElementById('categories').innerHTML = cats.map(c=>`
-    <div class="cat-item">
-      <div class="cat-header"><span class="cat-emoji">${c.emoji}</span><span class="cat-name">${c.name}</span></div>
-      <div class="cat-score" style="color:${scoreColor(c.score)}">${c.score}%</div>
-      <div class="cat-bar"><div class="cat-fill" style="width:0%;background:${scoreColor(c.score)}" data-target="${c.score}"></div></div>
-    </div>
-  `).join('');
-  setTimeout(()=>{ document.querySelectorAll('.cat-fill').forEach(el=>{ el.style.width=el.dataset.target+'%'; }); },400);
-
-  const combo = getComboVibe(ps,ds,vs,rs);
-  document.getElementById('vibe-text').textContent = combo||arch.vibe;
-
-  const months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-  const now=new Date();
-  document.getElementById('card-date').textContent=`${months[now.getMonth()]} ${now.getFullYear()}`;
-}
-
-function animateCount(id, target, color, delay) {
-  const el=document.getElementById(id);
-  el.style.color=color;
-  let start=null;
-  setTimeout(()=>{
-    function step(ts){
-      if(!start) start=ts;
-      const p=Math.min((ts-start)/1000,1);
-      const ease=1-Math.pow(1-p,3);
-      el.textContent=Math.round(ease*target);
-      if(p<1) requestAnimationFrame(step);
-      else el.textContent=target;
-    }
-    requestAnimationFrame(step);
-  },delay);
-// ── SHARE & SAVE ──────────────────────────────────────────────
-async function saveCard() {
-  const btn = document.getElementById('btn-save');
-  const icon = document.getElementById('save-icon');
-  const text = document.getElementById('save-text');
-
-  icon.textContent = '⏳';
-  text.textContent = 'Generating...';
-  btn.style.opacity = '0.8';
-  btn.disabled = true;
-
-  try {
-    const card = document.getElementById('share-card');
-    // Temporarily hide geo SVG for cleaner render
-    const geo = card.querySelector('.card-geo');
-    if (geo) geo.style.display = 'none';
-
-    const canvas = await html2canvas(card, {
-      backgroundColor: '#13131A',
-      scale: 3,
-      useCORS: true,
-      allowTaint: true,
-      logging: false
-    });
-
-    if (geo) geo.style.display = '';
-
-    // Download as image
-    const link = document.createElement('a');
-    link.download = 'my-ratio.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-
-    icon.textContent = '✓';
-    text.textContent = 'Saved! Post it. 🔥';
-    setTimeout(() => {
-      icon.textContent = '✦';
-      text.textContent = 'Save My Ratio Card';
-      btn.style.opacity = '1';
-      btn.disabled = false;
-    }, 3000);
-  } catch (e) {
-    icon.textContent = '✦';
-    text.textContent = 'Save My Ratio Card';
-    btn.style.opacity = '1';
-    btn.disabled = false;
-  }
-}
-
-function shareNative() {
-  const score = document.getElementById('halal-num').textContent;
-  const title = document.getElementById('result-title').innerText.replace('\n', ' ');
-  const text = `I just got ${score}% Halal on The Ratio 😭 "${title}" — take the test:`;
-  const url = window.location.href;
-  if (navigator.share) {
-    navigator.share({ title: 'The Ratio', text, url }).catch(()=>{});
-  } else {
-    navigator.clipboard.writeText(`${text} ${url}`).then(() => {
-      alert('Link copied! Go paste it. 🔗');
-    });
-  }
-}
-
-function shareWhatsApp() {
-  const score = document.getElementById('halal-num').textContent;
-  const title = document.getElementById('result-title').innerText.replace('\n', ' ');
-  const text = encodeURIComponent(`I just got ${score}% Halal on The Ratio 😭 "${title}" — take the test: ${window.location.href}`);
-  window.open(`https://wa.me/?text=${text}`, '_blank');
-}
-
-function shareToInstagram() {
-  // Save card first, then prompt
-  saveCard();
-  setTimeout(() => {
-    alert('Card saved! Open Instagram → New Story → tap the image 📸');
-  }, 1500);
-}
-
-// ── PWA INSTALL PROMPT ─────────────────────────────────────────
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  // Show a subtle install banner after result
-  setTimeout(() => {
-    const banner = document.getElementById('install-banner');
-    if (banner && document.getElementById('result').classList.contains('active')) {
-      banner.style.display = 'flex';
-    }
-  }, 3000);
-});
-
-// ── SERVICE WORKER (offline support) ──────────────────────────
-if ('serviceWorker' in navigator) {
-  const swCode = `
-    const CACHE = 'ratio-v1';
-    self.addEventListener('install', e => {
-      e.waitUntil(caches.open(CACHE).then(c => c.addAll(['/'])));
-    });
-    self.addEventListener('fetch', e => {
-      e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
-    });
-  `;
-  const swBlob = new Blob([swCode], {type: 'application/javascript'});
-  const swUrl = URL.createObjectURL(swBlob);
-  navigator.serviceWorker.register(swUrl).catch(() => {});
-}
-</script>
 <!-- PWA INSTALL BANNER -->
 <div class="install-banner" id="install-banner">
   <div style="font-size:24px">⚖️</div>
@@ -721,6 +319,366 @@ if ('serviceWorker' in navigator) {
 </div>
 
 <script>
+// ── QUESTIONS ──────────────────────────────────────────────────
+const questions = [
+  { cat:"plate", category:"🍔 Plate", text:"Your friends order pizza. The only option has pepperoni. You...", answers:[
+    {emoji:"🚫", text:"Hard no. I'll eat before I arrive next time.", score:100},
+    {emoji:"🤔", text:"Pick the pepperoni off. It's basically halal now.", score:35},
+    {emoji:"😬", text:"One slice won't hurt... probably.", score:10},
+    {emoji:"🤷", text:"I ordered the pepperoni tbh.", score:0}
+  ]},
+  { cat:"plate", category:"🍔 Plate", text:"Someone offers you a drink at a party. You...", answers:[
+    {emoji:"✋", text:"\"I don't drink.\" No explanation needed.", score:100},
+    {emoji:"🥤", text:"Ask if there's anything non-alcoholic.", score:80},
+    {emoji:"👃", text:"Take a sip just to see what it tastes like.", score:10},
+    {emoji:"🥃", text:"You brought the bottle.", score:0}
+  ]},
+  { cat:"plate", category:"🍔 Plate", text:"You're three drinks in and your mum calls. You...", answers:[
+    {emoji:"📵", text:"This scenario does not apply to me.", score:100},
+    {emoji:"😬", text:"Let it ring. Call back tomorrow.", score:30},
+    {emoji:"🤫", text:"Answer but speak very carefully.", score:15},
+    {emoji:"😂", text:"Tell her you love her. She has no idea.", score:0}
+  ]},
+  { cat:"deen", category:"🌙 Deen", text:"The last time you prayed was...", answers:[
+    {emoji:"🕌", text:"Today.", score:100},
+    {emoji:"📅", text:"This week.", score:65},
+    {emoji:"🤔", text:"Recently. Ish.", score:25},
+    {emoji:"💭", text:"You'd have to think about it.", score:0}
+  ]},
+  { cat:"deen", category:"🌙 Deen", text:"It's Ramadan. Your actual situation is...", answers:[
+    {emoji:"📿", text:"Fasting every day. Taraweeh most nights.", score:100},
+    {emoji:"🌙", text:"Fasting. Not doing much else.", score:65},
+    {emoji:"😬", text:"Fasting when it's convenient.", score:25},
+    {emoji:"🍔", text:"Eating normally and telling no one.", score:0}
+  ]},
+  { cat:"deen", category:"🌙 Deen", text:"The morning after a night out, you feel...", answers:[
+    {emoji:"😴", text:"I don't have nights out.", score:100},
+    {emoji:"🤲", text:"Guilty.", score:45},
+    {emoji:"😐", text:"Fine.", score:10},
+    {emoji:"🔄", text:"Already planning the next one.", score:0}
+  ]},
+  { cat:"vibe", category:"🤳 Vibe", text:"Someone finds your camera roll. You...", answers:[
+    {emoji:"📸", text:"Completely fine. Here, scroll.", score:100},
+    {emoji:"😊", text:"Fine, nothing crazy.", score:70},
+    {emoji:"😬", text:"Grab your phone back.", score:20},
+    {emoji:"💀", text:"That cannot happen.", score:0}
+  ]},
+  { cat:"vibe", category:"🤳 Vibe", text:"Your finsta versus your main account. The difference is...", answers:[
+    {emoji:"🤷", text:"I don't have a finsta. Same person everywhere.", score:100},
+    {emoji:"😊", text:"Just more unfiltered. Same person essentially.", score:65},
+    {emoji:"😬", text:"Different lifestyle entirely. We don't cross-post.", score:15},
+    {emoji:"🎭", text:"Two different people. Two different lives.", score:0}
+  ]},
+  { cat:"vibe", category:"🤳 Vibe", text:"How many personalities do you have depending on who you're around?", answers:[
+    {emoji:"😇", text:"One. I'm the same person everywhere.", score:100},
+    {emoji:"🔄", text:"Two — home version and outside version.", score:60},
+    {emoji:"🎭", text:"Three or four. It's called code-switching.", score:20},
+    {emoji:"🃏", text:"Genuinely lost count. Depends on the group.", score:0}
+  ]},
+  { cat:"vibe", category:"🤳 Vibe", text:"Your relationship with weed, cigarettes, hookah, or anything in that zone is...", answers:[
+    {emoji:"🚫", text:"Nothing. Clean. Never touched it.", score:100},
+    {emoji:"💨", text:"Hookah occasionally. It's a vibe and you know it.", score:50},
+    {emoji:"🤧", text:"Regular cigarettes or weed. I've justified it to myself.", score:15},
+    {emoji:"🌿", text:"All of the above. It's a whole lifestyle at this point.", score:0}
+  ]},
+  { cat:"vibe", category:"🤳 Vibe", text:"How you dress when you go out is...", answers:[
+    {emoji:"🧕", text:"Covered and modest. Every day, no exceptions.", score:100},
+    {emoji:"😊", text:"Generally modest. Nothing too revealing.", score:70},
+    {emoji:"🫣", text:"Depends entirely on who I'm seeing and where I'm going.", score:25},
+    {emoji:"🪞", text:"My mum would not approve of this outfit.", score:0}
+  ]},
+  { cat:"vibe", category:"🤳 Vibe", text:"Your non-Muslim friends know you're Muslim. They'd describe your lifestyle as...", answers:[
+    {emoji:"🌟", text:"Practicing. They respect it.", score:100},
+    {emoji:"😊", text:"Muslim but relaxed about it.", score:60},
+    {emoji:"😐", text:"They don't really associate you with being Muslim.", score:20},
+    {emoji:"🙈", text:"They don't know you're Muslim.", score:0}
+  ]},
+  { cat:"rizq", category:"💬 Rizq", text:"Your actual relationship situation right now is...", answers:[
+    {emoji:"💍", text:"Single, married, or pursuing someone with clear intentions.", score:100},
+    {emoji:"📖", text:"Talking to someone. Keeping it halal. Mostly.", score:55},
+    {emoji:"🫠", text:"Situationship. No label. Don't ask.", score:20},
+    {emoji:"🕸️", text:"It's complicated and getting more complicated.", score:0}
+  ]},
+  { cat:"rizq", category:"💬 Rizq", text:"Your parents know about the person you're seeing. Or do they...", answers:[
+    {emoji:"😊", text:"Yes. They're involved in the process.", score:100},
+    {emoji:"🤐", text:"Yes. And they already love him.", score:55},
+    {emoji:"😬", text:"No. And they cannot find out.", score:10},
+    {emoji:"🎭", text:"You have a whole separate story prepared if asked.", score:0}
+  ]},
+  { cat:"rizq", category:"💬 Rizq", text:"You've lied to your parents about where you were...", answers:[
+    {emoji:"🤷", text:"Never.", score:100},
+    {emoji:"😬", text:"Once or twice. Small things.", score:50},
+    {emoji:"😐", text:"Regularly. It's just easier.", score:10},
+    {emoji:"📋", text:"You have a system.", score:0}
+  ]},
+  { cat:"rizq", category:"💬 Rizq", text:"What dating app are you on?", answers:[
+    {emoji:"🤲", text:"Astaghfirullah, not on any dating apps.", score:100},
+    {emoji:"🍯", text:"Baklava or Muzz. Keeping it in the community.", score:80},
+    {emoji:"💛", text:"Hinge or Raya. Intentions are... technically there.", score:25},
+    {emoji:"🔥", text:"Tinder. And the profile is very much active.", score:0}
+  ]},
+  { cat:"rizq", category:"💬 Rizq", text:"It's Friday night. You're...", answers:[
+    {emoji:"🕌", text:"At an Islamic event or a halaqah.", score:100},
+    {emoji:"🎮", text:"Halal hangout. Food, games, home by midnight.", score:75},
+    {emoji:"🍻", text:"Out.", score:15},
+    {emoji:"🌅", text:"Getting home as the Fajr adhan plays.", score:0}
+  ]},
+  { cat:"rizq", category:"💬 Rizq", text:"You matched with someone on a dating app. They ask what you're looking for. You say...", answers:[
+    {emoji:"💍", text:"Something serious, eventually leading to marriage.", score:100},
+    {emoji:"🤔", text:"\"Getting to know people.\" Vague but not dishonest.", score:55},
+    {emoji:"😅", text:"Whatever they want to hear honestly.", score:15},
+    {emoji:"📲", text:"You have three apps and no one knows your real name.", score:0}
+  ]},
+  { cat:"rizq", category:"💬 Rizq", text:"Your parents ask how your deen is going. You...", answers:[
+    {emoji:"😊", text:"Tell them honestly — wins and struggles both.", score:100},
+    {emoji:"🙂", text:"\"Alhamdulillah, good.\" Technically not a lie.", score:55},
+    {emoji:"📊", text:"Immediately change the subject. Works every time.", score:20},
+    {emoji:"📵", text:"You've been declining their FaceTime for two weeks.", score:0}
+  ]}
+];
+
+// ── ARCHETYPES ─────────────────────────────────────────────────
+const archetypes = [
+  { min:90, title:'<em>Sheikh/Sheikha</em><br>Energy',      badge:'SHEIKH/SHEIKHA ENERGY',    vibe:'"Carrying the ummah on your back. Mashallah. Are you okay though?"' },
+  { min:75, title:'Habibi,<br><em>You\'re Trying</em>',     badge:"HABIBI, YOU'RE TRYING",    vibe:'"Not perfect but the intention is there. Allah sees the effort."' },
+  { min:60, title:'<em>Certified</em><br>Moderate Muslim',  badge:'CERTIFIED MODERATE MUSLIM', vibe:'"Halal food, most prayers, and your situationship is... developing."' },
+  { min:40, title:'<em>Islamically</em><br>Ambiguous',      badge:'ISLAMICALLY AMBIGUOUS',    vibe:'"You picked the pepperoni off. You held the drink but didn\'t sip it. We respect the effort."' },
+  { min:20, title:'Astaghfirullah<br><em>Deluxe</em>',      badge:'ASTAGHFIRULLAH DELUXE',    vibe:'"You know what you\'re doing. You also know what you should be doing. These are not the same thing."' },
+  { min:0,  title:'May Allah<br><em>Have Mercy</em>',       badge:'MAY ALLAH HAVE MERCY',     vibe:'"Not lost. Just on a very scenic route back. We believe in you habibi."' }
+];
+
+function getComboVibe(p, d, v, r) {
+  if (p >= 90 && r < 40) return '"Would never touch non-halal meat but your situationship has a situationship. Interesting priorities."';
+  if (d >= 85 && v < 40) return '"Praying consistently but your camera roll says otherwise. A complex individual."';
+  if (v >= 80 && r < 40) return '"Clean finsta, chaotic love life. The algorithm is saved. The heart is not."';
+  if (p < 30 && d >= 60) return '"Spiritually holding on. But you ate the pepperoni and you know what you did."';
+  if (r >= 90 && d < 40) return '"Waiting for the right one but hasn\'t prayed in a while. The intentions are there. The execution needs work."';
+  return null;
+}
+
+// ── HELPERS ────────────────────────────────────────────────────
+function avg(arr) { return arr.length ? Math.round(arr.reduce((a,b)=>a+b,0)/arr.length) : 0; }
+function scoreColor(s) { return s>=75?'var(--halal)':s>=45?'var(--accent)':'var(--haram)'; }
+
+// ── STATE ──────────────────────────────────────────────────────
+let current = 0;
+let catScores = { plate:[], deen:[], vibe:[], rizq:[] };
+
+// ── SCREENS ────────────────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ── QUIZ ───────────────────────────────────────────────────────
+function startTest() {
+  current = 0;
+  catScores = { plate:[], deen:[], vibe:[], rizq:[] };
+  renderQuestion();
+  showScreen('question');
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  document.getElementById('dots').innerHTML = questions.map((_,i) =>
+    `<div class="dot ${i<current?'done':i===current?'current':''}"></div>`
+  ).join('');
+  document.getElementById('counter').textContent = `${current+1} / ${questions.length}`;
+  document.getElementById('q-body').innerHTML = `
+    <div class="q-category">${q.category}</div>
+    <div class="q-text">${q.text}</div>
+    <div class="answer-list">
+      ${q.answers.map((a,i) => `
+        <button class="answer-btn" onclick="selectAnswer(${a.score},'${q.cat}',${i})">
+          <span class="answer-emoji">${a.emoji}</span>
+          <span>${a.text}</span>
+        </button>
+      `).join('')}
+    </div>
+  `;
+}
+
+function selectAnswer(score, cat, idx) {
+  document.querySelectorAll('.answer-btn').forEach((b,i) => {
+    b.disabled = true;
+    if (i === idx) b.classList.add('selected');
+  });
+  catScores[cat].push(score);
+  setTimeout(() => {
+    if (current < questions.length - 1) { current++; renderQuestion(); }
+    else showLoading();
+  }, 380);
+}
+
+function goBack() {
+  if (current > 0) {
+    catScores[questions[current-1].cat].pop();
+    current--;
+    renderQuestion();
+  } else {
+    showScreen('splash');
+  }
+}
+
+// ── LOADING ────────────────────────────────────────────────────
+const loadingMsgs = [
+  "consulting the scholars...",
+  "checking your camera roll...",
+  "evaluating your situationship...",
+  "asking your mum...",
+  "reviewing your finsta...",
+  "running the numbers..."
+];
+let msgIdx = 0, msgInterval;
+
+function showLoading() {
+  showScreen('loading');
+  const el = document.getElementById('loading-msg');
+  el.textContent = loadingMsgs[0];
+  msgIdx = 0;
+  msgInterval = setInterval(() => {
+    el.style.opacity = 0;
+    setTimeout(() => {
+      msgIdx = (msgIdx+1) % loadingMsgs.length;
+      el.textContent = loadingMsgs[msgIdx];
+      el.style.opacity = 1;
+    }, 400);
+  }, 1800);
+  setTimeout(() => {
+    clearInterval(msgInterval);
+    buildResult();
+    showScreen('result');
+  }, 5000);
+}
+
+// ── RESULT ─────────────────────────────────────────────────────
+function buildResult() {
+  const ps = avg(catScores.plate);
+  const ds = avg(catScores.deen);
+  const vs = avg(catScores.vibe);
+  const rs = avg(catScores.rizq);
+  const all = [...catScores.plate,...catScores.deen,...catScores.vibe,...catScores.rizq];
+  const overall = avg(all);
+  const haram = 100 - overall;
+
+  const arch = archetypes.find(a => overall >= a.min) || archetypes[archetypes.length-1];
+  document.getElementById('result-title').innerHTML = arch.title;
+  document.getElementById('card-badge').textContent = arch.badge;
+
+  animateCount('halal-num', overall, 'var(--halal)', 800);
+  animateCount('haram-num', haram, 'var(--haram)', 1000);
+  setTimeout(() => { document.getElementById('split-halal').style.width = overall+'%'; }, 300);
+
+  const cats = [
+    {emoji:'🍔', name:'Plate', score:ps},
+    {emoji:'🤳', name:'Vibe',  score:vs},
+    {emoji:'💬', name:'Rizq',  score:rs},
+    {emoji:'🌙', name:'Deen',  score:ds}
+  ];
+  document.getElementById('categories').innerHTML = cats.map(c => `
+    <div class="cat-item">
+      <div class="cat-header"><span class="cat-emoji">${c.emoji}</span><span class="cat-name">${c.name}</span></div>
+      <div class="cat-score" style="color:${scoreColor(c.score)}">${c.score}%</div>
+      <div class="cat-bar"><div class="cat-fill" style="width:0%;background:${scoreColor(c.score)}" data-target="${c.score}"></div></div>
+    </div>
+  `).join('');
+  setTimeout(() => {
+    document.querySelectorAll('.cat-fill').forEach(el => { el.style.width = el.dataset.target+'%'; });
+  }, 400);
+
+  const combo = getComboVibe(ps, ds, vs, rs);
+  document.getElementById('vibe-text').textContent = combo || arch.vibe;
+
+  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  const now = new Date();
+  document.getElementById('card-date').textContent = `${months[now.getMonth()]} ${now.getFullYear()}`;
+}
+
+function animateCount(id, target, color, delay) {
+  const el = document.getElementById(id);
+  el.style.color = color;
+  let start = null;
+  setTimeout(() => {
+    function step(ts) {
+      if (!start) start = ts;
+      const p = Math.min((ts-start)/1000, 1);
+      const ease = 1 - Math.pow(1-p, 3);
+      el.textContent = Math.round(ease * target);
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = target;
+    }
+    requestAnimationFrame(step);
+  }, delay);
+}
+
+// ── SHARE & SAVE ───────────────────────────────────────────────
+async function saveCard() {
+  const btn  = document.getElementById('btn-save');
+  const icon = document.getElementById('save-icon');
+  const text = document.getElementById('save-text');
+  icon.textContent = '⏳';
+  text.textContent = 'Generating...';
+  btn.disabled = true;
+  try {
+    const card = document.getElementById('share-card');
+    const geo = card.querySelector('.card-geo');
+    if (geo) geo.style.display = 'none';
+    const canvas = await html2canvas(card, { backgroundColor:'#13131A', scale:3, useCORS:true, logging:false });
+    if (geo) geo.style.display = '';
+    const link = document.createElement('a');
+    link.download = 'my-ratio.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    icon.textContent = '✓';
+    text.textContent = 'Saved! Post it. 🔥';
+    setTimeout(() => { icon.textContent='✦'; text.textContent='Save My Ratio Card'; btn.disabled=false; }, 3000);
+  } catch(e) {
+    icon.textContent = '✦';
+    text.textContent = 'Save My Ratio Card';
+    btn.disabled = false;
+  }
+}
+
+function shareNative() {
+  const score = document.getElementById('halal-num').textContent;
+  const titleEl = document.getElementById('result-title');
+  const title = titleEl ? titleEl.innerText.replace(/\n/g,' ') : 'The Ratio';
+  const msg = `I just got ${score}% Halal on The Ratio 😭 "${title}" — take the test:`;
+  const url = window.location.href;
+  if (navigator.share) {
+    navigator.share({ title:'The Ratio', text:msg, url }).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(`${msg} ${url}`).then(() => alert('Link copied! 🔗'));
+  }
+}
+
+function shareWhatsApp() {
+  const score = document.getElementById('halal-num').textContent;
+  const titleEl = document.getElementById('result-title');
+  const title = titleEl ? titleEl.innerText.replace(/\n/g,' ') : 'The Ratio';
+  const msg = encodeURIComponent(`I just got ${score}% Halal on The Ratio 😭 "${title}" — take the test: ${window.location.href}`);
+  window.open(`https://wa.me/?text=${msg}`, '_blank');
+}
+
+function shareToInstagram() {
+  saveCard();
+  setTimeout(() => alert('Card saved! Open Instagram → New Story → tap the image 📸'), 2000);
+}
+
+// ── PWA ────────────────────────────────────────────────────────
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  setTimeout(() => {
+    const banner = document.getElementById('install-banner');
+    if (banner && document.getElementById('result').classList.contains('active')) {
+      banner.style.display = 'flex';
+    }
+  }, 3000);
+});
+
 function installApp() {
   if (deferredPrompt) {
     deferredPrompt.prompt();
@@ -731,6 +689,5 @@ function installApp() {
   }
 }
 </script>
-
 </body>
 </html>
